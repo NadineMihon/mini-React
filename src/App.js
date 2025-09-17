@@ -8,17 +8,20 @@ function App() {
   const createStore = (reducer, initialState) => {
     const currentReducer = reducer;
     let state = initialState;
-    let listener = undefined;
+    let listeners = [];
 
     return {
       dispatch(action) {
         state = currentReducer(state, action);
-        if (listener) {
-          listener();
+        if (listeners.length) {
+          listeners.map((listener) => listener());
         }
       },
       subscribe(newListener) {
-        listener = newListener;
+        listeners = [
+          ...listeners,
+          newListener
+        ];
       },
       getState() {
         return state;
@@ -35,12 +38,16 @@ function App() {
       default:
         return state;
     }
-  }
+  };
 
   const store = createStore(counter);
 
   store.subscribe(() => {
     console.log(`Change: ${store.getState()}`)
+  });
+
+  store.subscribe(() => {
+    console.log(`Result: ${store.getState()}`)
   });
 
   store.dispatch({type: INCREMENT});
