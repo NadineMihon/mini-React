@@ -14,7 +14,7 @@ function App() {
       dispatch(action) {
         state = currentReducer(state, action);
         if (listeners.length) {
-          listeners.map((listener) => listener());
+          listeners.forEach((listener) => listener());
         }
       },
       subscribe(newListener) {
@@ -40,7 +40,7 @@ function App() {
     }
   };
 
-  const store = createStore(counter);
+  const store = createStore(counter, 0);
 
   store.subscribe(() => {
     console.log(`Change: ${store.getState()}`)
